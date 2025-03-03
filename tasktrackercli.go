@@ -14,11 +14,11 @@ func main() {
 		return
 	}
 
-	result := processCommand(os.Args[1:])
+	result := ProcessCommand(os.Args[1:])
 	fmt.Println(result)
 }
 
-func processCommand(args []string) string {
+func ProcessCommand(args []string) string {
 	command := args[0]
 	commandArgs := args[1:]
 
