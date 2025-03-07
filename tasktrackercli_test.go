@@ -94,8 +94,15 @@ var _ = Describe("Tasktrackercli", func() {
 				Expect(response).To(Equal("There is no tasks to show"))
 			})
 		})
-		// Context("with one or more tasks to show", func() {
-		// 	It("should return a text with the tasks, one per line, with the id and the title separated by a comma")
-		// })
+
+		Context("with one or more tasks to show", func() {
+			It("should return a text with the tasks, one per line, with the id and the title separated by a comma", func() {
+				main.ProcessCommand([]string{"add", "learn go"})
+
+				args = []string{"list"}
+				response := main.ProcessCommand(args)
+				Expect(response).To(Equal("1 (todo), learn go\n"))
+			})
+		})
 	})
 })

@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"slices"
+	"strings"
 )
 
 func main() {
@@ -79,7 +80,13 @@ func ProcessCommand(args []string) string {
 			return "There is no tasks to show"
 		}
 
-		return "there is a lot of tasks"
+		var sb strings.Builder
+
+		for _, task := range tasks {
+			sb.WriteString(fmt.Sprintf("%v (%v), %v\n", task.Id, task.Status, task.Title))
+		}
+
+		return sb.String()
 	default:
 		return "Invalid command. Please run the help command"
 	}
