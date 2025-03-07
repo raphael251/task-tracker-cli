@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -66,6 +67,19 @@ func ProcessCommand(args []string) string {
 		}
 
 		return fmt.Sprintf("Task deleted successfully (ID: %v)", commandArgs[0])
+	case "list":
+		tasks, err := listTasks()
+
+		if err != nil {
+			fmt.Println(err)
+			return "Error listing a task"
+		}
+
+		if len(tasks) == 0 {
+			return "There is no tasks to show"
+		}
+
+		return "there is a lot of tasks"
 	default:
 		return "Invalid command. Please run the help command"
 	}
@@ -99,8 +113,11 @@ func getFilePath() string {
 func addTask(title string) (*Task, error) {
 	db, err := getDB()
 
-	// If it's the first task added (the file tasks.json doesn't exists)
 	if err != nil {
+		return nil, fmt.Errorf("could not add task")
+	}
+
+	if len(db.Tasks) == 0 {
 		firstId := 1
 
 		task := Task{
@@ -181,10 +198,28 @@ func deleteTask(id string) error {
 	return fmt.Errorf("the task with the specified ID was not found")
 }
 
+func listTasks() ([]Task, error) {
+	db, err := getDB()
+
+	if err != nil {
+		return nil, fmt.Errorf("could not list tasks")
+	}
+
+	if len(db.Tasks) == 0 {
+		return []Task{}, nil
+	}
+
+	return db.Tasks, nil
+}
+
 func getDB() (*DB, error) {
 	jsonFile, err := os.Open(getFilePath())
 
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return &DB{}, nil
+		}
+
 		return nil, err
 	}
 
