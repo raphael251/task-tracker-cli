@@ -19,6 +19,10 @@ func main() {
 }
 
 func ProcessCommand(args []string) string {
+	if len(args) == 0 {
+		return "You need to pass at least one command"
+	}
+
 	command := args[0]
 	commandArgs := args[1:]
 
@@ -51,7 +55,7 @@ func ProcessCommand(args []string) string {
 		return fmt.Sprintf("Task updated successfully (ID: %v)", taskUpdated.Id)
 	case "delete":
 		if len(commandArgs) != 1 {
-			return "You must pass exactly one argument to the add command, which is the id of the task to be deleted"
+			return "You must pass exactly one argument to the delete command, which is the id of the task to be deleted"
 		}
 
 		err := deleteTask(commandArgs[0])
