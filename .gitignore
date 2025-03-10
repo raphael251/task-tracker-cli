@@ -23,3 +23,6 @@ go.work.sum
 
 # tasks file
 tasks.json
+
+# tasktracker executable binary
+tasktracker
