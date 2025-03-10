@@ -8,6 +8,7 @@ import (
 	"os"
 	"slices"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -83,7 +84,7 @@ func ProcessCommand(args []string) string {
 		var sb strings.Builder
 
 		for _, task := range tasks {
-			sb.WriteString(fmt.Sprintf("%v (%v), %v\n", task.Id, task.Status, task.Title))
+			sb.WriteString(fmt.Sprintf("%v (%v), %v\n", task.Id, task.Status, task.Description))
 		}
 
 		return sb.String()
@@ -97,9 +98,11 @@ type Tasks struct {
 }
 
 type Task struct {
-	Id     string `json:"id"`
-	Title  string `json:"title"`
-	Status string `json:"status"`
+	Id          string    `json:"id"`
+	Description string    `json:"description"`
+	Status      string    `json:"status"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 type DB struct {
@@ -109,7 +112,7 @@ type DB struct {
 
 const (
 	StatusTodo       = "todo"
-	StatusInProgress = "inprogress"
+	StatusInProgress = "in-progress"
 	StatusDone       = "done"
 )
 
@@ -117,7 +120,7 @@ func getFilePath() string {
 	return "tasks.json"
 }
 
-func addTask(title string) (*Task, error) {
+func addTask(description string) (*Task, error) {
 	db, err := getDB()
 
 	if err != nil {
@@ -129,8 +132,10 @@ func addTask(title string) (*Task, error) {
 
 		task := Task{
 			fmt.Sprint(firstId),
-			title,
+			description,
 			StatusTodo,
+			time.Now(),
+			time.Now(),
 		}
 
 		db := &DB{
@@ -151,8 +156,10 @@ func addTask(title string) (*Task, error) {
 
 	task := Task{
 		fmt.Sprint(incrementedId),
-		title,
+		description,
 		StatusTodo,
+		time.Now(),
+		time.Now(),
 	}
 
 	db.Tasks = append(db.Tasks, task)
@@ -162,7 +169,7 @@ func addTask(title string) (*Task, error) {
 	return &task, nil
 }
 
-func updateTask(id string, newTitle string) (*Task, error) {
+func updateTask(id string, newDescription string) (*Task, error) {
 	db, err := getDB()
 
 	if err != nil {
@@ -173,8 +180,9 @@ func updateTask(id string, newTitle string) (*Task, error) {
 
 	for i := 0; i < len(db.Tasks); i += 1 {
 		if db.Tasks[i].Id == id {
-			db.Tasks[i].Title = newTitle
 			updatedTask = &db.Tasks[i]
+			updatedTask.Description = newDescription
+			updatedTask.UpdatedAt = time.Now()
 
 			saveDB(db)
 
