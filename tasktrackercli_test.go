@@ -84,6 +84,18 @@ var _ = Describe("Tasktrackercli", func() {
 				Expect(response).To(Equal("You must pass exactly one argument to the delete command, which is the id of the task to be deleted"))
 			})
 		})
+
+		Context("with the right quantity of args (one)", func() {
+			BeforeEach(func() {
+				main.ProcessCommand([]string{"add", "unit test all the code"})
+			})
+
+			It("should return the text informing that the task was deleted successfully", func() {
+				args = []string{"delete", "1"}
+				response := main.ProcessCommand((args))
+				Expect(response).To(Equal("Task deleted successfully (ID: 1)"))
+			})
+		})
 	})
 
 	Describe("Executing the list command", func() {
