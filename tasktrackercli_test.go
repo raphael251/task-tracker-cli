@@ -17,8 +17,8 @@ var _ = Describe("Tasktrackercli", func() {
 		os.Remove("tasks.json")
 	})
 
-	Describe("Executing any command", func() {
-		Context("with no args", func() {
+	Describe("Executing the app", func() {
+		Context("with no command", func() {
 			It("should return a text error", func() {
 				args = []string{}
 				response := main.ProcessCommand(args)
@@ -26,7 +26,7 @@ var _ = Describe("Tasktrackercli", func() {
 			})
 		})
 
-		Context("that does not exists", func() {
+		Context("with a command that does not exists", func() {
 			It("should return a text error", func() {
 				args = []string{"anycommand"}
 				response := main.ProcessCommand(args)
