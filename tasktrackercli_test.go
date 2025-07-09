@@ -120,4 +120,43 @@ var _ = Describe("Tasktrackercli", func() {
 			})
 		})
 	})
+
+	Describe("Executing the mark-in-progress command", func() {
+		Context("with no args being passed", func() {
+			It("should return a text error", func() {
+				response := main.ProcessCommand([]string{"mark-in-progress"})
+
+				Expect(response).To(Equal("You must pass exactly one argument to the mark-in-progress command, which is the id of the task to be marked"))
+			})
+		})
+
+		Context("with a task with a todo status", func() {
+			It("should return a successful text message, containing the id of the marked task", func() {
+				main.ProcessCommand([]string{"add", "learn golang"})
+
+				response := main.ProcessCommand([]string{"mark-in-progress", "1"})
+
+				Expect(response).To(Equal("Task marked as in-progress successfully (ID: 1)"))
+			})
+		})
+
+		Context("with a task already with a in-progress status", func() {
+			It("should return a successful text message, containing the id of the task", func() {
+				main.ProcessCommand([]string{"add", "learn golang"})
+				main.ProcessCommand([]string{"mark-in-progress", "1"})
+
+				response := main.ProcessCommand([]string{"mark-in-progress", "1"})
+
+				Expect(response).To(Equal("Task marked as in-progress successfully (ID: 1)"))
+			})
+		})
+
+		Context("with a non-existing task id", func() {
+			It("should return a successful text message, containing the id of the task", func() {
+				response := main.ProcessCommand([]string{"mark-in-progress", "10"})
+
+				Expect(response).To(Equal("Error marking task as in-progress"))
+			})
+		})
+	})
 })
