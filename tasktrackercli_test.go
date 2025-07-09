@@ -1,6 +1,8 @@
 package main_test
 
 import (
+	"os"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -12,6 +14,7 @@ var _ = Describe("Tasktrackercli", func() {
 
 	BeforeEach(func() {
 		args = []string{}
+		os.Remove("tasks.json")
 	})
 
 	Describe("Executing any command", func() {
