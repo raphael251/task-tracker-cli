@@ -8,7 +8,7 @@ Project based on the following requirements: https://roadmap.sh/projects/task-tr
 
 ## Running the unit tests
 
-You can run the unit tests by simply running `go test -v ./**/*.go`. The `-v` option is for the verbose output.
+You can run the unit tests by simply running `go test -v ./*.go`. The `-v` option is for the verbose output.
 
 ## Building the project
 
