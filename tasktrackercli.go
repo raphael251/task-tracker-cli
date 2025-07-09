@@ -107,6 +107,28 @@ func ProcessCommand(args []string) string {
 		}
 
 		return sb.String()
+	case "mark-in-progress":
+		if len(commandArgs) != 1 {
+			return "You must pass exactly one argument to the mark-in-progress command, which is the id of the task to be marked"
+		}
+
+		tasksManager, err := taskmanager.GetTaskManager()
+
+		if err != nil {
+			fmt.Println("could not mark task as in-progress")
+			return "Error marking task as in-progress"
+		}
+
+		task := tasksManager.MarkTaskInProgress(commandArgs[0])
+
+		if task.Id == "" {
+			fmt.Println("task not found")
+			return "Error marking task as in-progress"
+		}
+
+		tasksManager.Save()
+
+		return fmt.Sprintf("Task marked as in-progress successfully (ID: %v)", task.Id)
 	default:
 		return "Invalid command. Please run the help command"
 	}
