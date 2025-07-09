@@ -13,8 +13,8 @@ func (tm *TasksManager) AddTask(description string) Task {
 			fmt.Sprint(firstId),
 			description,
 			StatusTodo,
-			time.Now(),
-			time.Now(),
+			time.Now().UTC(),
+			time.Now().UTC(),
 		}
 
 		tm.LastUsedId = firstId
