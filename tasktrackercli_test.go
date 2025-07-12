@@ -119,6 +119,34 @@ var _ = Describe("Tasktrackercli", func() {
 				Expect(response).To(Equal("1 (todo), learn go\n"))
 			})
 		})
+
+		Context("with the additional arg for filter", func() {
+			Context("with more than one argument for the filter", func() {
+				It("should use just the first argument and ignore the extra ones", func() {
+					main.ProcessCommand([]string{"add", "learn go"})
+					main.ProcessCommand([]string{"add", "learn java"})
+					main.ProcessCommand([]string{"add", "learn rust"})
+					main.ProcessCommand([]string{"mark-in-progress", "1"})
+
+					args = []string{"list", "in-progress", "extra"}
+					response := main.ProcessCommand(args)
+					Expect(response).To(Equal("1 (in-progress), learn go\n"))
+				})
+			})
+
+			Context("with only one arg for filter (the correct way)", func() {
+				It("should use just the first argument and ignore the extra ones", func() {
+					main.ProcessCommand([]string{"add", "learn go"})
+					main.ProcessCommand([]string{"add", "learn java"})
+					main.ProcessCommand([]string{"add", "learn rust"})
+					main.ProcessCommand([]string{"mark-in-progress", "1"})
+
+					args = []string{"list", "in-progress"}
+					response := main.ProcessCommand(args)
+					Expect(response).To(Equal("1 (in-progress), learn go\n"))
+				})
+			})
+		})
 	})
 
 	Describe("Executing the mark-in-progress command", func() {

@@ -94,7 +94,13 @@ func ProcessCommand(args []string) string {
 			return "Error listing tasks"
 		}
 
-		tasks := tasksManager.ListTasks()
+		var tasks []taskmanager.Task
+
+		if len(commandArgs) >= 1 {
+			tasks = tasksManager.ListTasks(commandArgs[0])
+		} else {
+			tasks = tasksManager.ListTasks()
+		}
 
 		if tasks == nil || len(tasks) == 0 {
 			return "There is no tasks to show"
